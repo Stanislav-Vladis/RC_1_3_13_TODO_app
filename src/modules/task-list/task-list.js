@@ -6,7 +6,7 @@ function TaskList({tasksData}) {
 
     const liElements = tasksData.completed.map((task) => {
         return (
-            <li key={`completed-${MD5(task.created).toString()}`} className="completed">
+            <li key={`completed-${MD5(task.date).toString()}`} className="completed">
                 <Task description = {task.description} created = {task.created}/>
             </li>
         )
@@ -14,14 +14,14 @@ function TaskList({tasksData}) {
         tasksData.active.map((task) => {
             if (task.editing) {
                 return (
-                    <li key={`editing-${MD5(task.created).toString()}`} className="editing">
+                    <li key={`editing-${MD5(task.date).toString()}`} className="editing">
                         <Task description = {task.description} created = {task.created}/>
                         <input type="text" className="edit" defaultValue="Editing task" />
                     </li>
                 )
             }
             return (
-                <li key={`active-${MD5(task.created).toString()}`}>
+                <li key={`active-${MD5(task.date).toString()}`}>
                     <Task description = {task.description} created = {task.created}/>
                 </li>
             )

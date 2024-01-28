@@ -10,11 +10,11 @@ function App() {
   }
   const tasksData = {
     completed: [
-      { description: 'Completed task', created: createDate(new Date('2024-01-28T19:00:00Z')) }
+      { description: 'Completed task', created: createDate(new Date('2024-01-28T19:00:00Z')), date: new Date('2024-01-28T19:00:00Z') }
     ],
     active: [
-      { description: 'Editing task', created: createDate(new Date('2024-01-28T19:05:00Z')), editing: true },
-      { description: 'Active task', created: createDate(new Date('2024-01-28T19:10:00Z')), editing: false }
+      { description: 'Editing task', created: createDate(new Date('2024-01-28T19:05:00Z')), date: new Date('2024-01-28T19:00:00Z'), editing: true },
+      { description: 'Active task', created: createDate(new Date('2024-01-28T19:10:00Z')), date: new Date('2024-01-28T19:00:00Z'), editing: false }
     ]
   };
 
