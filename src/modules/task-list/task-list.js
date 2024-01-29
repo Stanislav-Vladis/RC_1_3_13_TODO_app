@@ -4,25 +4,26 @@ import React from "react";
 
 export default class TaskList extends React.Component {
 
-
-
     render() {
         const {tasksData, onCompleted, onDestroy} = this.props;
 
-        const liElements = tasksData.map((task) => {
-            const id = task.id;
-            const classList = [];
-            if (task.completed) classList.push('completed');
+        const liElements = tasksData
+            .filter(task => task.displayTask)
+            .map(task => {
+                const id = task.id;
+                const classList = [];
+                if (task.completed) classList.push('completed');
 
-            return (
-                <li key={id} className={classList.length > 0 ? classList.join(' ') : undefined}>
-                    <Task
-                        description={task.description}
-                        timeOfCreated={task.timeOfCreated}
-                        onCompleted={() => onCompleted(id)}
-                        onDestroy={() => onDestroy(id)}/>
-                </li>
-            )
+                return (
+                    <li key={id} className={classList.length > 0 ? classList.join(' ') : undefined}>
+                        <Task
+                            description={task.description}
+                            timeOfCreated={task.timeOfCreated}
+                            isChecked={task.completed}
+                            onCompleted={() => onCompleted(id)}
+                            onDestroy={() => onDestroy(id)}/>
+                    </li>
+                )
         });
 
         return (
