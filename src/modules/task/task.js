@@ -1,6 +1,14 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 export default class Task extends React.Component {
+    static propTypes = {
+        description: PropTypes.string,
+        timeOfCreated: PropTypes.string,
+        isChecked: PropTypes.bool,
+        onCompleted: PropTypes.func,
+        onDestroy: PropTypes.func
+    }
     render() {
         const {description, timeOfCreated, isChecked, onCompleted, onDestroy} = this.props;
 

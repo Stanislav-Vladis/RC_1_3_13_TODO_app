@@ -28,8 +28,7 @@ export default class App extends React.Component {
       this.createTask('Completed task', new Date('2024-01-28T19:00:00Z')),
       this.createTask('Editing task', new Date('2024-01-28T19:05:00Z')),
       this.createTask('Active task', new Date('2024-01-28T19:10:00Z'))
-    ],
-    taskFilter: 'All'
+    ]
   }
 
   deleteTaskById = (id) => {
@@ -123,6 +122,7 @@ export default class App extends React.Component {
           <section className="main">
             <TaskList
                 tasksData={tasksData}
+                taskFilter={taskFilter}
                 onCompleted={(id) => this.completedTask(id)}
                 onDestroy={(id) => this.deleteTaskById(id)}
             />

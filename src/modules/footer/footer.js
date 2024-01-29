@@ -1,8 +1,22 @@
 import './footer.css';
 import TaskFilter from "../tasks-filter/task-filter";
 import React from "react";
+import PropTypes from "prop-types";
 
 export default class Footer extends React.Component {
+    static defaultProps = {
+        taskFilter: 'All'
+    }
+
+    static propTypes = {
+        tasksData: PropTypes.array,
+        taskFilter: PropTypes.string,
+        onShowAllTask: PropTypes.func,
+        onShowActiveTask: PropTypes.func,
+        onShowCompletedTask: PropTypes.func,
+        onClearCompleted: PropTypes.func
+    }
+
     countUnfinishedTasks = (tasksData) => {
         return tasksData.filter(task => !task.completed).length;
     }
