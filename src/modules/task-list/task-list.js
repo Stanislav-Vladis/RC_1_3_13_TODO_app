@@ -1,45 +1,66 @@
 import './task-list.css';
-import Task from "../task/task";
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
+import Task from '../task/task';
 
 export default class TaskList extends React.Component {
-    static propTypes = {
-        tasksData: PropTypes.array,
-        taskFilter: PropTypes.string,
-        onCompleted: PropTypes.func,
-        onDestroy: PropTypes.func
-    }
+  state = {
+    newDescription: ''
+  };
 
-    render() {
-        const {tasksData, taskFilter, onCompleted, onDestroy} = this.props;
+  static propTypes = {
+    tasksData: PropTypes.array,
+    taskFilter: PropTypes.string,
+    onEditing: PropTypes.func,
+    onSubmitNewTaskDescription: PropTypes.func,
+    onCompleted: PropTypes.func,
+    onDestroy: PropTypes.func
+  };
 
-        const liElements = tasksData
-            .filter(task => task.displayTask)
-            .map(task => {
-                if (taskFilter === 'Active' && task.completed) return null;
-                if (taskFilter === 'Completed' && !task.completed) return null;
+  onChangeTaskDescription = (event) => {
+    this.setState({
+      newDescription: event.target.value
+    });
+  };
 
-                const id = task.id;
-                const classList = [];
-                if (task.completed) classList.push('completed');
+  render() {
+    const { tasksData, taskFilter, onEditing, onSubmitNewTaskDescription, onCompleted, onDestroy } = this.props;
 
-                return (
-                    <li key={id} className={classList.length > 0 ? classList.join(' ') : undefined}>
-                        <Task
-                            description={task.description}
-                            timeOfCreated={task.timeOfCreated}
-                            isChecked={task.completed}
-                            onCompleted={() => onCompleted(id)}
-                            onDestroy={() => onDestroy(id)}/>
-                    </li>
-                )
-        });
+    const liElements = tasksData
+      .filter((task) => task.displayTask)
+      .map((task) => {
+        if (taskFilter === 'Active' && task.completed) return null;
+        if (taskFilter === 'Completed' && !task.completed) return null;
+
+        const { id } = task;
+        const classList = [];
+        if (task.editing) classList.push('editing');
+        if (task.completed) classList.push('completed');
 
         return (
-            <ul className="todo-list">
-                {liElements}
-            </ul>
+          <li key={id} className={classList.length > 0 ? classList.join(' ') : undefined}>
+            <Task
+              description={task.description}
+              timeOfCreated={task.timeOfCreated}
+              isChecked={task.completed}
+              onEditing={() => onEditing(id)}
+              onCompleted={() => onCompleted(id)}
+              onDestroy={() => onDestroy(id)}
+            />
+            {task.editing && (
+              <form onSubmit={(event) => onSubmitNewTaskDescription(id, event, this.state.newDescription)}>
+                <input
+                  type="text"
+                  className="edit"
+                  defaultValue={task.description}
+                  onChange={this.onChangeTaskDescription}
+                />
+              </form>
+            )}
+          </li>
         );
-    }
+      });
+
+    return <ul className="todo-list">{liElements}</ul>;
+  }
 }

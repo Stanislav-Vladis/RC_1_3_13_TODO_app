@@ -68,3 +68,7 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+My docs:
+
+[https://dev.to/eprikhodko/eslint-prettier-vs-code-create-react-app-airbnb-52bc](https://dev.to/eprikhodko/eslint-prettier-vs-code-create-react-app-airbnb-52bc)
