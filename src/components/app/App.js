@@ -1,21 +1,12 @@
 import './App.css';
 import { formatDistanceToNow } from 'date-fns';
 import React from 'react';
-import { MD5 } from 'crypto-js';
-import TaskList from './task-list/task-list';
-import NewTaskForm from './new-task-form/new-task-form';
-import Footer from './footer/footer';
+import TaskList from '../task-list/task-list';
+import NewTaskForm from '../new-task-form/new-task-form';
+import Footer from '../footer/footer';
+import Utils from '../utils/utils';
 
 export default class App extends React.Component {
-  static createTask = (description, currentDate = new Date()) => ({
-    id: MD5(currentDate.toString()).toString(),
-    description,
-    timeOfCreated: `created ${formatDistanceToNow(currentDate, { addSuffix: true })}`,
-    editing: false,
-    completed: false,
-    displayTask: true
-  });
-
   static setPropertyInTask = (task, propertyName, value) => {
     const cloneTask = structuredClone(task);
     cloneTask[propertyName] = value;
@@ -24,9 +15,9 @@ export default class App extends React.Component {
 
   state = {
     tasksData: [
-      App.createTask('Completed task', new Date('2024-01-28T19:00:00Z')),
-      App.createTask('Editing task', new Date('2024-01-28T19:05:00Z')),
-      App.createTask('Active task', new Date('2024-01-28T19:10:00Z'))
+      Utils.createTask('Completed task', new Date('2024-01-28T19:00:00Z')),
+      Utils.createTask('Editing task', new Date('2024-01-28T19:05:00Z')),
+      Utils.createTask('Active task', new Date('2024-01-28T19:10:00Z'))
     ]
   };
 
@@ -43,14 +34,16 @@ export default class App extends React.Component {
   };
 
   addTask = (text) => {
-    this.setState(({ tasksData }) => {
-      const cloneTaskData = structuredClone(tasksData);
-      cloneTaskData.push(App.createTask(text));
+    if (text.trim().length > 0) {
+      this.setState(({ tasksData }) => {
+        const cloneTaskData = structuredClone(tasksData);
+        cloneTaskData.push(Utils.createTask(text));
 
-      return {
-        tasksData: cloneTaskData
-      };
-    });
+        return {
+          tasksData: cloneTaskData
+        };
+      });
+    }
   };
 
   editingTask = (id) => {
@@ -69,8 +62,14 @@ export default class App extends React.Component {
     this.setState(({ tasksData }) => ({
       tasksData: tasksData.map((task) => {
         if (task.id === id) {
-          const editingTask = App.setPropertyInTask(task, 'description', newDescription);
-          return App.setPropertyInTask(editingTask, 'editing', !task.editing);
+          let editingTask = App.setPropertyInTask(task, 'description', newDescription);
+          editingTask = App.setPropertyInTask(editingTask, 'editing', !task.editing);
+          editingTask = App.setPropertyInTask(
+            editingTask,
+            'timeOfCreated',
+            `changed ${formatDistanceToNow(new Date(), { addSuffix: true })}`
+          );
+          return editingTask;
         }
         return task;
       }),
@@ -90,32 +89,19 @@ export default class App extends React.Component {
   };
 
   showAllTask = () => {
-    this.setState(({ tasksData }) => ({
-      tasksData: tasksData.map((task) => App.setPropertyInTask(task, 'displayTask', true)),
+    this.setState(() => ({
       taskFilter: 'All'
     }));
   };
 
   showActiveTask = () => {
-    this.setState(({ tasksData }) => ({
-      tasksData: tasksData.map((task) => {
-        if (!task.completed) {
-          return App.setPropertyInTask(task, 'displayTask', true);
-        }
-        return App.setPropertyInTask(task, 'displayTask', false);
-      }),
+    this.setState(() => ({
       taskFilter: 'Active'
     }));
   };
 
   showCompletedTask = () => {
-    this.setState(({ tasksData }) => ({
-      tasksData: tasksData.map((task) => {
-        if (task.completed) {
-          return App.setPropertyInTask(task, 'displayTask', true);
-        }
-        return App.setPropertyInTask(task, 'displayTask', false);
-      }),
+    this.setState(() => ({
       taskFilter: 'Completed'
     }));
   };

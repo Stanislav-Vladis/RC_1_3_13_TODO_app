@@ -16,8 +16,8 @@ export default class Task extends React.Component {
 
     return (
       <div className="view">
-        <input className="toggle" type="checkbox" checked={isChecked} onChange={onCompleted} />
-        <label>
+        <input id="toggleCheckbox" className="toggle" type="checkbox" checked={isChecked} onChange={onCompleted} />
+        <label htmlFor="toggleCheckbox">
           <span className="description">{description}</span>
           <span className="created">{timeOfCreated}</span>
         </label>
