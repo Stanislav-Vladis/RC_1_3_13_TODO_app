@@ -1,7 +1,7 @@
 import './footer.css';
 import React from 'react';
 import PropTypes from 'prop-types';
-import TaskFilter from '../tasks-filter/task-filter';
+import TaskFilter from '../tasks-filter/task-filter.jsx';
 
 export default class Footer extends React.Component {
   static defaultProps = {
