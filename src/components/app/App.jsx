@@ -1,10 +1,10 @@
 import './App.css';
 import { formatDistanceToNow } from 'date-fns';
 import React from 'react';
-import TaskList from '../task-list/task-list';
-import NewTaskForm from '../new-task-form/new-task-form';
-import Footer from '../footer/footer';
-import Utils from '../utils/utils';
+import TaskList from '../task-list/task-list.jsx';
+import NewTaskForm from '../new-task-form/new-task-form.jsx';
+import Footer from '../footer/footer.jsx';
+import Utils from '../../utils/utils';
 
 export default class App extends React.Component {
   static setPropertyInTask = (task, propertyName, value) => {

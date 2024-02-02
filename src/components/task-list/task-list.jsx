@@ -2,7 +2,7 @@ import './task-list.css';
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import Task from '../task/task';
+import Task from '../task/task.jsx';
 
 export default class TaskList extends React.Component {
   state = {
@@ -40,6 +40,7 @@ export default class TaskList extends React.Component {
       return (
         <li key={id} className={classList}>
           <Task
+            id={id}
             description={task.description}
             timeOfCreated={task.timeOfCreated}
             isChecked={task.completed}

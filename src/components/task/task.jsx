@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 export default class Task extends React.Component {
   static propTypes = {
+    id: PropTypes.string,
     description: PropTypes.string,
     timeOfCreated: PropTypes.string,
     isChecked: PropTypes.bool,
@@ -12,12 +13,12 @@ export default class Task extends React.Component {
   };
 
   render() {
-    const { description, timeOfCreated, isChecked, onEditing, onCompleted, onDestroy } = this.props;
+    const { id, description, timeOfCreated, isChecked, onEditing, onCompleted, onDestroy } = this.props;
 
     return (
       <div className="view">
-        <input id="toggleCheckbox" className="toggle" type="checkbox" checked={isChecked} onChange={onCompleted} />
-        <label htmlFor="toggleCheckbox">
+        <input id={id} className="toggle" type="checkbox" checked={isChecked} onChange={onCompleted} />
+        <label htmlFor={id}>
           <span className="description">{description}</span>
           <span className="created">{timeOfCreated}</span>
         </label>
