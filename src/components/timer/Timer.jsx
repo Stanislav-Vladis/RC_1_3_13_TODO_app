@@ -60,8 +60,6 @@ class Timer extends React.Component {
   updateTimer = (id) => {
     const timerData = JSON.parse(localStorage.getItem(id.toString()));
 
-    console.log(timerData);
-
     if (timerData.pauseDate) {
       timerData.lostTime += Utils.getDifferenceFromCurrentDate(timerData.pauseDate).allSeconds;
     }
@@ -87,7 +85,6 @@ class Timer extends React.Component {
       this.updateTimer(id);
       return;
     }
-    console.log(id);
 
     const newTimerData = {
       startDate: new Date(),
@@ -97,14 +94,10 @@ class Timer extends React.Component {
       timerId: null
     };
 
-    console.log(newTimerData);
-
     this.setState({
       [id]: newTimerData
     });
     localStorage.setItem(id.toString(), JSON.stringify(newTimerData));
-
-    console.log(localStorage.getItem(id.toString()));
 
     this.updateTimer(id);
   };
