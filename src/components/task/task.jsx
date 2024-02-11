@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Timer from "../timer/Timer.jsx";
+import Timer from '../timer/Timer.jsx';
 
 export default class Task extends React.Component {
   static propTypes = {

@@ -1,6 +1,6 @@
 import { formatDistanceToNow } from 'date-fns';
 import shortid from 'shortid';
-import {instanceOf, object} from "prop-types";
+import { instanceOf, object } from 'prop-types';
 
 class Utils {
   static createTask(id, description, currentDate = new Date()) {
