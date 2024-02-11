@@ -15,9 +15,9 @@ export default class App extends React.Component {
 
   state = {
     tasksData: [
-      Utils.createTask('Completed task', new Date('2024-01-28T19:00:00Z')),
-      Utils.createTask('Editing task', new Date('2024-01-28T19:05:00Z')),
-      Utils.createTask('Active task', new Date('2024-01-28T19:10:00Z'))
+      Utils.createTask('0', 'Completed task', new Date('2024-01-28T19:00:00Z')),
+      Utils.createTask('1', 'Editing task', new Date('2024-01-28T19:05:00Z')),
+      Utils.createTask('2', 'Active task', new Date('2024-01-28T19:10:00Z'))
     ]
   };
 
@@ -37,7 +37,7 @@ export default class App extends React.Component {
     if (text.trim().length > 0) {
       this.setState(({ tasksData }) => {
         const cloneTaskData = structuredClone(tasksData);
-        cloneTaskData.push(Utils.createTask(text));
+        cloneTaskData.push(Utils.createTask(Object.keys(tasksData).length.toString(), text));
 
         return {
           tasksData: cloneTaskData

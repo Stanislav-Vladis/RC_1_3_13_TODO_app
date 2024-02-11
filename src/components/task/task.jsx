@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Timer from "../timer/Timer.jsx";
 
 export default class Task extends React.Component {
   static propTypes = {
@@ -20,6 +21,7 @@ export default class Task extends React.Component {
         <input id={id} className="toggle" type="checkbox" checked={isChecked} onChange={onCompleted} />
         <label htmlFor={id}>
           <span className="description">{description}</span>
+          <Timer id={id} />
           <span className="created">{timeOfCreated}</span>
         </label>
         <button className="icon icon-edit" onClick={onEditing}></button>
