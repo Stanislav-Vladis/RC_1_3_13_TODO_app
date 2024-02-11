@@ -62,7 +62,9 @@ class Timer extends React.Component {
 
     console.log(timerData);
 
-    timerData.lostTime += Utils.getDifferenceFromCurrentDate(timerData.pauseDate).allSeconds;
+    if (timerData.pauseDate) {
+      timerData.lostTime += Utils.getDifferenceFromCurrentDate(timerData.pauseDate).allSeconds;
+    }
     timerData.calculatedTime = Utils.getDifferenceFromCurrentDate(timerData.startDate, timerData.lostTime);
     timerData.timerId = JSON.stringify(setTimeout(() => this.updateTimer(id), 1000));
     timerData.pauseDate = null;
