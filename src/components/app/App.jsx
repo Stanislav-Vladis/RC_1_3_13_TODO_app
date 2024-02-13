@@ -37,13 +37,14 @@ export default class App extends React.Component {
     if (text.trim().length > 0) {
       this.setState(({ tasksData }) => {
         const cloneTaskData = structuredClone(tasksData);
-        cloneTaskData.push(Utils.createTask(Object.keys(tasksData).length.toString(), text));
+        cloneTaskData.push(Utils.createTask(tasksData.length.toString(), text));
 
         return {
           tasksData: cloneTaskData
         };
       });
     }
+    return this.state.tasksData;
   };
 
   editingTask = (id) => {

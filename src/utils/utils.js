@@ -1,31 +1,44 @@
 import { formatDistanceToNow } from 'date-fns';
+import shortid from 'shortid';
 
 class Utils {
   static createTask(id, description, currentDate = new Date()) {
     return {
       id: id,
       description,
-      seconds: 0,
-      isActive: false,
-      timer: null,
       timeOfCreated: `created ${formatDistanceToNow(currentDate, { addSuffix: true })}`,
       editing: false,
       completed: false
     };
   }
 
-  static getDifferenceFromCurrentDate(startDate, lostTime = 0) {
+  static createEmptySecondsTimer() {
+    return {
+      startDate: null,
+      pauseDate: null,
+      seconds: 0,
+      lostSeconds: 0,
+      timerId: null
+    };
+  }
+
+  static getElapsedMilliseconds(startDate) {
     if (!startDate) return 0;
+    return Math.ceil(new Date() - Date.parse(startDate));
+  }
 
-    let allSeconds = Math.floor((new Date() - Date.parse(startDate)) / 1000);
-    if (lostTime) allSeconds -= lostTime;
-    const minutes = Math.floor(allSeconds / 60);
-    const seconds = allSeconds % 60;
+  static getElapsedSeconds(startDate) {
+    return Math.ceil(Utils.getElapsedMilliseconds(startDate) / 1000);
+  }
 
-    const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
+  static getCurrentTimerTime(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const secondsInMinute = seconds % 60;
+
     const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+    const formattedSeconds = secondsInMinute < 10 ? `0${secondsInMinute}` : secondsInMinute;
 
-    return { allSeconds, seconds: formattedSeconds, minutes: formattedMinutes };
+    return { seconds: formattedSeconds, minutes: formattedMinutes };
   }
 }
 

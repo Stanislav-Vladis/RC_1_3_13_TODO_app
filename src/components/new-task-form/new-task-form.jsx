@@ -1,6 +1,7 @@
 import './new-task-form.css';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Utils from '../../utils/utils';
 
 export default class NewTaskForm extends React.Component {
   state = {
@@ -19,7 +20,9 @@ export default class NewTaskForm extends React.Component {
 
   onLabelSubmit = (event) => {
     event.preventDefault();
-    this.props.addTask(this.state.label);
+    const updatedTasksData = this.props.addTask(this.state.label);
+    sessionStorage.setItem(updatedTasksData.length.toString(), JSON.stringify(Utils.createEmptySecondsTimer()));
+    Utils.createEmptySecondsTimer();
     this.setState({
       label: ''
     });
