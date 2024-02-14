@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import '../timer/timer.css'
-import Utils from "../../utils/utils";
+import Timer from "../timer/timer.jsx";
 
 export default class Task extends React.Component {
   static propTypes = {
@@ -38,11 +37,12 @@ export default class Task extends React.Component {
         <input id={id} className="toggle" type="checkbox" checked={isChecked} onChange={onCompleted} />
         <label htmlFor={id}>
           <span className="description">{description}</span>
-          <span className="description">
-            <button id={id} className="icon icon-play" onClick={onStartTimer}></button>
-            <button id={id} className="icon icon-pause" onClick={onStopTimer}></button>
-            {Utils.prepareTimer(minutes, seconds)}
-          </span>
+          <Timer id={id}
+                 minutes={minutes}
+                 seconds={seconds}
+                 onStartTimer={onStartTimer}
+                 onStopTimer={onStopTimer}
+          />
           <span className="created">{timeOfCreated}</span>
         </label>
         <button className="icon icon-edit" onClick={onEditing}></button>
