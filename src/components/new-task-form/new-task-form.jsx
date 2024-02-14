@@ -1,7 +1,6 @@
 import './new-task-form.css';
 import React from 'react';
 import PropTypes from 'prop-types';
-import Utils from '../../utils/utils';
 
 export default class NewTaskForm extends React.Component {
   state = {
@@ -20,9 +19,7 @@ export default class NewTaskForm extends React.Component {
 
   onLabelSubmit = (event) => {
     event.preventDefault();
-    const updatedTasksData = this.props.addTask(this.state.label);
-    sessionStorage.setItem(updatedTasksData.length.toString(), JSON.stringify(Utils.createEmptySecondsTimer()));
-    Utils.createEmptySecondsTimer();
+    this.props.addTask(this.state.label);
     this.setState({
       label: ''
     });
@@ -32,13 +29,14 @@ export default class NewTaskForm extends React.Component {
     return (
       <header className="header">
         <h1>todos</h1>
-        <form onSubmit={this.onLabelSubmit}>
-          <input
-            className="new-todo"
-            placeholder="What needs to be done?"
-            onChange={this.onLabelChange}
-            value={this.state.label}
+        <form className="new-todo-form" onSubmit={this.onLabelSubmit}>
+          <input className="new-todo"
+                 placeholder="What needs to be done?"
+                 onChange={this.onLabelChange}
+                 value={this.state.label}
           />
+          <input className="new-todo-form__timer" placeholder="Min" />
+          <input className="new-todo-form__timer" placeholder="Sec" />
         </form>
       </header>
     );
