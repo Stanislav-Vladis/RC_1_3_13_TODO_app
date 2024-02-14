@@ -2,14 +2,24 @@ import { formatDistanceToNow } from 'date-fns';
 import shortid from 'shortid';
 
 class Utils {
-  static createTask(description, currentDate = new Date()) {
+  static createTask(id, description, minutes, seconds, currentDate = new Date()) {
     return {
-      id: shortid.generate(),
-      description,
+      id: id,
+      description: description,
+      minutes: minutes,
+      seconds: seconds,
+      isRunning: false,
+      intervalId: null,
       timeOfCreated: `created ${formatDistanceToNow(currentDate, { addSuffix: true })}`,
       editing: false,
       completed: false
     };
+  }
+
+  static prepareTimer(minutes, seconds) {
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+    const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
+    return `${formattedMinutes}:${formattedSeconds}`;
   }
 }
 

@@ -12,6 +12,8 @@ export default class TaskList extends React.Component {
   static propTypes = {
     tasksData: PropTypes.array,
     taskFilter: PropTypes.string,
+    onStartTimer: PropTypes.func,
+    onStopTimer: PropTypes.func,
     onEditing: PropTypes.func,
     onSubmitNewTaskDescription: PropTypes.func,
     onCompleted: PropTypes.func,
@@ -25,7 +27,16 @@ export default class TaskList extends React.Component {
   };
 
   render() {
-    const { tasksData, taskFilter, onEditing, onSubmitNewTaskDescription, onCompleted, onDestroy } = this.props;
+    const {
+      tasksData,
+      taskFilter,
+      onStartTimer,
+      onStopTimer,
+      onEditing,
+      onSubmitNewTaskDescription,
+      onCompleted,
+      onDestroy
+    } = this.props;
 
     const liElements = tasksData.map((task) => {
       if (taskFilter === 'Active' && task.completed) return null;
@@ -42,8 +53,12 @@ export default class TaskList extends React.Component {
           <Task
             id={id}
             description={task.description}
+            minutes={task.minutes}
+            seconds={task.seconds}
             timeOfCreated={task.timeOfCreated}
             isChecked={task.completed}
+            onStartTimer={() => onStartTimer(id)}
+            onStopTimer={() => onStopTimer(id)}
             onEditing={() => onEditing(id)}
             onCompleted={() => onCompleted(id)}
             onDestroy={() => onDestroy(id)}
