@@ -1,5 +1,4 @@
 import { formatDistanceToNow } from 'date-fns';
-import shortid from 'shortid';
 
 class Utils {
   static createTask(id, description, minutes, seconds, currentDate = new Date()) {
@@ -10,6 +9,7 @@ class Utils {
       seconds: seconds,
       isRunning: false,
       intervalId: null,
+      currentDate: currentDate,
       timeOfCreated: `created ${formatDistanceToNow(currentDate, { addSuffix: true })}`,
       editing: false,
       completed: false
