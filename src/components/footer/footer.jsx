@@ -9,7 +9,7 @@ export default class Footer extends React.Component {
   };
 
   static propTypes = {
-    tasksData: PropTypes.array,
+    tasksData: PropTypes.object,
     taskFilter: PropTypes.string,
     onShowAllTask: PropTypes.func,
     onShowActiveTask: PropTypes.func,
@@ -17,7 +17,7 @@ export default class Footer extends React.Component {
     onClearCompleted: PropTypes.func
   };
 
-  static countUnfinishedTasks = (tasksData) => tasksData.filter((task) => !task.completed).length;
+  static countUnfinishedTasks = (tasksData) => Object.values(tasksData).filter((task) => !task.completed).length;
 
   render() {
     const { tasksData, taskFilter, onShowAllTask, onShowActiveTask, onShowCompletedTask, onClearCompleted } =

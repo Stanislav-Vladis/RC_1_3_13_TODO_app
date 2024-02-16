@@ -10,7 +10,7 @@ export default class TaskList extends React.Component {
   };
 
   static propTypes = {
-    tasksData: PropTypes.array,
+    tasksData: PropTypes.object,
     taskFilter: PropTypes.string,
     onStartTimer: PropTypes.func,
     onStopTimer: PropTypes.func,
@@ -38,7 +38,8 @@ export default class TaskList extends React.Component {
       onDestroy
     } = this.props;
 
-    const liElements = tasksData.map((task) => {
+    const liElements = Object.keys(tasksData).map(key => {
+      const task = tasksData[key];
       if (taskFilter === 'Active' && task.completed) return null;
       if (taskFilter === 'Completed' && !task.completed) return null;
 

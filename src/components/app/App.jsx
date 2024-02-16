@@ -1,6 +1,7 @@
 import './App.css';
 import { formatDistanceToNow } from 'date-fns';
 import React from 'react';
+import shortid from "shortid";
 import TaskList from '../task-list/task-list.jsx';
 import NewTaskForm from '../new-task-form/new-task-form.jsx';
 import Footer from '../footer/footer.jsx';
@@ -14,25 +15,33 @@ export default class App extends React.Component {
   };
 
   state = {
-    tasksData: [
-      Utils.createTask('0', 'Completed task', 0, 10, new Date('2024-01-28T19:00:00Z')),
-      Utils.createTask('1', 'Editing task', 1, 20, new Date('2024-01-28T19:05:00Z')),
-      Utils.createTask('2', 'Active task', 3, 30, new Date('2024-01-28T19:10:00Z'))
-    ]
+    tasksData: {
+      'key0': Utils.createTask('key0', 'Completed task', 0, 10, new Date('2024-01-28T19:00:00Z')),
+      'key1': Utils.createTask('key1', 'Editing task', 1, 20, new Date('2024-01-28T19:05:00Z')),
+      'key2': Utils.createTask('key2', 'Active task', 3, 30, new Date('2024-01-28T19:10:00Z'))
+    }
   };
 
   deleteTaskById = (id) => {
-    const { tasksData } = this.state;
+    const { tasksData} = this.state;
 
     if (tasksData[id]?.intervalId) clearInterval(tasksData[id].intervalId);
+    const updatedTasksData = {}
+      Object.keys(tasksData)
+        .filter(key => tasksData[key].id !== id)
+        .forEach(key => {
+          updatedTasksData[key] = tasksData[key];
+        })
+
     this.setState({
-      tasksData: tasksData.filter((task) => task.id !== id)
+      tasksData: updatedTasksData
     });
   };
 
   deleteAllCompletedTask = () => {
     this.setState(({ tasksData }) => ({
-      tasksData: tasksData.map(task => {
+      tasksData: Object.keys(tasksData).map(key => {
+        const task = tasksData[key];
         if (task.completed) {
           if (task.intervalId) clearInterval(task.intervalId);
         }
@@ -45,7 +54,8 @@ export default class App extends React.Component {
     if (text.trim().length > 0) {
       this.setState(({ tasksData }) => {
         const cloneTaskData = structuredClone(tasksData);
-        cloneTaskData.push(Utils.createTask(cloneTaskData.length.toString(), text, minutes, seconds));
+        const id = shortid.generate();
+        cloneTaskData[id] = Utils.createTask(id, text, minutes, seconds);
 
         return {
           tasksData: cloneTaskData
@@ -56,7 +66,8 @@ export default class App extends React.Component {
 
   editingTask = (id) => {
     this.setState(({ tasksData }) => ({
-      tasksData: tasksData.map((task) => {
+      tasksData: Object.keys(tasksData).map(key => {
+        const task = tasksData[key];
         if (task.id === id) {
           return App.setPropertyInTask(task, 'editing', !task.editing);
         }
@@ -68,7 +79,8 @@ export default class App extends React.Component {
   submitNewTaskDescription = (id, event, newDescription) => {
     event.preventDefault();
     this.setState(({ tasksData }) => ({
-      tasksData: tasksData.map((task) => {
+      tasksData: Object.keys(tasksData).map(key => {
+        const task = tasksData[key];
         if (task.id === id) {
           let editingTask = App.setPropertyInTask(task, 'description', newDescription);
           editingTask = App.setPropertyInTask(editingTask, 'editing', !task.editing);
@@ -86,14 +98,22 @@ export default class App extends React.Component {
   };
 
   completedTask = (id) => {
-    this.setState(({ tasksData }) => ({
-      tasksData: tasksData.map((task) => {
+    const { tasksData} = this.state;
+
+    const updatedTasksData = {}
+    Object.keys(tasksData)
+      .forEach(key => {
+        const task = tasksData[key];
         if (task.id === id) {
-          return App.setPropertyInTask(task, 'completed', !task.completed);
+          updatedTasksData[key] = App.setPropertyInTask(task, 'completed', !task.completed);
+        } else {
+          updatedTasksData[key] = task;
         }
-        return task;
       })
-    }));
+
+    this.setState({
+      tasksData: updatedTasksData
+    });
   };
 
   showAllTask = () => {
@@ -129,12 +149,14 @@ export default class App extends React.Component {
   }
 
   startTimer = (id) => {
-    const { tasksData } = this.state;
+    const { tasksData} = this.state;
 
     if (tasksData[id]?.isRunning === false) {
       tasksData[id].isRunning = true;
       tasksData[id].intervalId = setInterval(() => {
         const cloneTaskData = structuredClone(this.state.tasksData);
+        cloneTaskData[id].timeOfCreated =
+          `created ${formatDistanceToNow(cloneTaskData[id].currentDate, { addSuffix: true })}`;
         cloneTaskData[id] = this.updateTimer(cloneTaskData[id]);
         this.setState({
           tasksData: cloneTaskData
