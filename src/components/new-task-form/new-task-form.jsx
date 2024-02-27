@@ -1,73 +1,71 @@
 import './new-task-form.css';
 import React from 'react';
 import PropTypes from 'prop-types';
-import { logDOM } from "@testing-library/react";
 
-export default class NewTaskForm extends React.Component {
-  state = {
-    label: '',
-    minutes: '',
-    seconds: ''
-  };
+const NewTaskForm = ({ addTask }) => {
+  const [label, setLabel] = React.useState('');
+  const [minutes, setMinutes] = React.useState('');
+  const [seconds, setSeconds] = React.useState('');
 
-  static propTypes = {
-    addTask: PropTypes.func
-  };
+  function onLabelChange(event) {
+    setLabel(event.target.value);
+  }
 
-  onLabelChange = (event) => {
-    this.setState({
-      label: event.target.value
-    });
-  };
-
-  onTimerChange = (event, key) => {
+  function onTimerChange(event, key) {
     const { value } = event.target;
     if (Number.isNaN(Number(value)) || value > 60 || value < 0) return
 
-    this.setState({
-      [key]: value,
-    })
+    switch (key) {
+      case 'minutes':
+        setMinutes(value);
+        break;
+      case 'seconds':
+        setSeconds(value);
+        break;
+      default:
+        break;
+    }
   }
 
-  onLabelSubmit = (event) => {
-    const { label, minutes, seconds } = this.state
-
+  function onLabelSubmit(event) {
     event.preventDefault();
     if (event.code === 'Enter' && minutes && seconds) {
-      this.props.addTask(label, Number(minutes), Number(seconds));
-      this.setState({
-        label: '',
-        minutes: '',
-        seconds: ''
-      });
+      addTask(label, Number(minutes), Number(seconds));
+      setLabel('');
+      setMinutes('');
+      setSeconds('');
     }
-  };
-
-  render() {
-    return (
-      <header className="header">
-        <h1>todos</h1>
-        {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
-        <form className="new-todo-form" onKeyUp={this.onLabelSubmit}>
-          <input className="new-todo"
-                 placeholder="What needs to be done?"
-                 onChange={this.onLabelChange}
-                 value={this.state.label}
-          />
-          <input
-            className="new-todo-form__timer"
-            placeholder="Min"
-            onChange={(event) => this.onTimerChange(event, 'minutes')}
-            value={this.state.minutes}
-          />
-          <input
-            className="new-todo-form__timer"
-            placeholder="Sec"
-            onChange={(event) => this.onTimerChange(event, 'seconds')}
-            value={this.state.seconds}
-          />
-        </form>
-      </header>
-    );
   }
+
+  return (
+    <header className="header">
+      <h1>todos</h1>
+      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
+      <form className="new-todo-form" onKeyUp={onLabelSubmit}>
+        <input className="new-todo"
+               placeholder="What needs to be done?"
+               onChange={onLabelChange}
+               value={label}
+        />
+        <input
+          className="new-todo-form__timer"
+          placeholder="Min"
+          onChange={(event) => onTimerChange(event, 'minutes')}
+          value={minutes}
+        />
+        <input
+          className="new-todo-form__timer"
+          placeholder="Sec"
+          onChange={(event) => onTimerChange(event, 'seconds')}
+          value={seconds}
+        />
+      </form>
+    </header>
+  );
 }
+
+NewTaskForm.propTypes = {
+  addTask: PropTypes.func
+}
+
+export default NewTaskForm;
