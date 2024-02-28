@@ -22,92 +22,108 @@ const App = () => {
   const [taskFilter, setTaskFilter] = useState('All');
 
   function deleteTaskById(id) {
-    if (tasksData[id]?.intervalId) clearInterval(tasksData[id].intervalId);
-    const updatedTasksData = {};
-    Object.keys(tasksData)
-      .filter((key) => tasksData[key].id !== id)
-      .forEach((key) => {
-        updatedTasksData[key] = tasksData[key];
-      });
+    setTasksData(prevTasksData => {
 
-    setTasksData(updatedTasksData);
+      if (prevTasksData[id]?.intervalId) clearInterval(prevTasksData[id].intervalId);
+      const updatedTasksData = {};
+      Object.keys(prevTasksData)
+        .filter((key) => prevTasksData[key].id !== id)
+        .forEach((key) => {
+          updatedTasksData[key] = prevTasksData[key];
+        });
+
+      return updatedTasksData;
+    });
   }
 
   function deleteAllCompletedTask() {
-    const cloneTaskData= structuredClone(tasksData);
+    setTasksData(prevTasksData => {
 
-    Object.keys(tasksData)
-      .map((key) => {
-        const task = tasksData[key];
-        if (task.completed) {
-          if (task.intervalId) clearInterval(task.intervalId);
-          delete cloneTaskData[key];
-        }
-        return task;
-      })
-      .filter((task) => !task.completed);
+      const cloneTaskData = structuredClone(prevTasksData);
+      Object.keys(prevTasksData)
+        .map((key) => {
+          const task = prevTasksData[key];
+          if (task.completed) {
+            if (task.intervalId) clearInterval(task.intervalId);
+            delete cloneTaskData[key];
+          }
+          return task;
+        })
+        .filter((task) => !task.completed);
 
-    setTasksData(cloneTaskData);
+      return cloneTaskData;
+    });
   }
 
   function addTask(text, minutes, seconds) {
     if (text.trim().length > 0) {
-      const cloneTaskData = structuredClone(tasksData);
-      const id = shortid.generate();
-      cloneTaskData[id] = Utils.createTask(id, text, minutes, seconds);
-      setTasksData(cloneTaskData);
+      setTasksData(prevTasksData => {
+
+        const cloneTaskData = structuredClone(prevTasksData);
+        const id = shortid.generate();
+        cloneTaskData[id] = Utils.createTask(id, text, minutes, seconds);
+
+        return cloneTaskData;
+      });
     }
   }
 
   function editingTask(id) {
-    const updatedTasksData = {};
-    Object.keys(tasksData).forEach((key) => {
-      const task = tasksData[key];
-      if (task.id === id) {
-        updatedTasksData[key] = setPropertyInTask(task, 'editing', !task.editing);
-      } else {
-        updatedTasksData[key] = task;
-      }
-    });
+    setTasksData(prevTasksData => {
 
-    setTasksData(updatedTasksData);
+      const updatedTasksData = {};
+      Object.keys(prevTasksData).forEach((key) => {
+        const task = prevTasksData[key];
+        if (task.id === id) {
+          updatedTasksData[key] = setPropertyInTask(task, 'editing', !task.editing);
+        } else {
+          updatedTasksData[key] = task;
+        }
+      });
+
+      return updatedTasksData;
+    });
   }
 
   function submitNewTaskDescription(id, event, description) {
     event.preventDefault();
 
-    const updatedTasksData = Object.keys(tasksData).reduce((value, key) => {
-      const task = tasksData[key];
+    setTasksData(prevTasksData => {
 
-      if (task.id === id) {
-        value[key] = {
-          ...task,
-          description: description,
-          editing: !task.editing,
-          timeOfCreated: `changed ${formatDistanceToNow(new Date(), { addSuffix: true })}`
-        };
-      } else {
-        value[key] = task;
-      }
+      const updatedTasksData = Object.keys(prevTasksData).reduce((value, key) => {
+        const task = prevTasksData[key];
+        if (task.id === id) {
+          value[key] = {
+            ...task,
+            description: description,
+            editing: !task.editing,
+            timeOfCreated: `changed ${formatDistanceToNow(new Date(), { addSuffix: true })}`
+          };
+        } else {
+          value[key] = task;
+        }
+        return value;
+      }, {});
 
-      return value;
-    }, {});
-
-    setTasksData(updatedTasksData);
-  };
+      return updatedTasksData;
+    });
+  }
 
   function completedTask(id) {
-    const updatedTasksData = {};
-    Object.keys(tasksData).forEach((key) => {
-      const task = tasksData[key];
-      if (task.id === id) {
-        updatedTasksData[key] = setPropertyInTask(task, 'completed', !task.completed);
-      } else {
-        updatedTasksData[key] = task;
-      }
-    });
+    setTasksData(prevTasksData => {
 
-    setTasksData(updatedTasksData);
+      const updatedTasksData = {};
+      Object.keys(prevTasksData).forEach((key) => {
+        const task = prevTasksData[key];
+        if (task.id === id) {
+          updatedTasksData[key] = setPropertyInTask(task, 'completed', !task.completed);
+        } else {
+          updatedTasksData[key] = task;
+        }
+      });
+
+      return updatedTasksData;
+    });
   }
 
   function showAllTask() {
